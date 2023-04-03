@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Character.h"
+#include "CharacterFactory.h"
 #include "Enemy.h"
 #include "EnemyFactory.h"
 
@@ -30,7 +31,8 @@ void Game::Start()
     std::cout << "How many enemies do you dare to face?" << std::endl;
     std::cin >> totalEnemies;
 
-    Character character{100, 5};
+    CharacterFactory characterFactory{};
+    Character character = characterFactory.Create();
     std::cout << "(Character) " << character.ToString() << std::endl;
 
     EnemyFactory enemyFactory{};
