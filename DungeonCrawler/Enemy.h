@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 
+#include <string>
 #include "Sizes.h"
 
 class Enemy
@@ -10,5 +10,7 @@ public:
     int Damage;
     Sizes Size;
 
+    bool IsDead();
+    void ApplyDamage(int damage);
     std::string ToString();
 };

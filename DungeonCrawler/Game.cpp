@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <vector>
-
 #include "Character.h"
 #include "CharacterFactory.h"
 #include "Enemy.h"
@@ -33,7 +32,7 @@ void Game::Start()
 
     CharacterFactory characterFactory{};
     Character character = characterFactory.Create();
-    std::cout << "(Character) " << character.ToString() << std::endl;
+    std::cout << "(Character) " << character.ToString() << std::endl << std::endl;
 
     EnemyFactory enemyFactory{};
     std::vector<Enemy> enemies{};
@@ -48,4 +47,116 @@ void Game::Start()
     {
         std::cout << "(Enemy" << std::to_string(i) << ") " << enemies[i].ToString() << std::endl;
     }
+
+    std::cout << std::endl << std::endl << "------------------ " << std::endl << std::endl << std::endl;
+    
+    int totalEnemiesAlive = totalEnemies;
+    
+    while(!character.IsDead() && totalEnemiesAlive > 0)
+    {
+        totalEnemiesAlive = 0;
+        
+        for (Enemy& enemy : enemies)
+        {
+            Battle(character, enemy);
+            
+            if(!enemy.IsDead())
+            {
+                totalEnemiesAlive++;
+            }
+            
+            if(character.IsDead())
+            {
+                break;
+            }
+        } 
+    }
+
+    ShowGameOver(character, enemies);
+
+    std::cout << "Press any key to exit. ";
+    char exit;
+    std::cin >> exit;
 }
+
+void Game::Battle(Character& character, Enemy& enemy)
+{
+    if(enemy.IsDead())
+    {
+        return;
+    }
+    
+    std::cout << "You (" << character.ToString() << ") attacked enemy (" << enemy.ToString() << "). ";
+    enemy.ApplyDamage(character.Damage);
+
+    if(enemy.IsDead())
+    {
+        std::cout << "Enemy was defeated!" << std::endl << std::endl;
+        return;
+    }
+    
+    std::cout << "Enemy is now with " << enemy.Health << "." << std::endl;
+
+    std::cout << "Enemy attacked you. ";
+    character.ApplyDamage(enemy.Damage);
+
+    if(character.IsDead())
+    {
+        std::cout << "You have been defeated!" << std::endl << std::endl;
+    }
+    else
+    {
+        std::cout << "You are now with " << character.Health << "." << std::endl << std::endl;
+    }
+}
+
+void Game::ShowGameOver(Character& character, std::vector<Enemy>& enemies)
+{
+    if(character.IsDead())
+    {
+        std::cout << "You lose!" << std::endl;
+    }
+    else
+    {
+        std::cout << "You won!" << std::endl;
+    }
+
+    int totalBigEnemies = 0;
+    int totalBigEnemiesDefeated = 0;
+    int totalMediumEnemies = 0;
+    int totalMediumEnemiesDefeated = 0;
+    int totalSmallEnemies = 0;
+    int totalSmallEnemiesDefeated = 0;
+
+    for (Enemy& enemy : enemies)
+    {
+        switch (enemy.Size)
+        {
+            case Sizes::Big:
+                IncrementEnemyReport(enemy, totalBigEnemies, totalBigEnemiesDefeated);
+                break;
+            case Sizes::Medium:
+                IncrementEnemyReport(enemy, totalMediumEnemies, totalMediumEnemiesDefeated);
+                break;
+            case Sizes::Small:
+                IncrementEnemyReport(enemy, totalSmallEnemies, totalSmallEnemiesDefeated);
+                break;
+        }    
+    }
+
+    std::cout << "Enemies defeated:" << std::endl;
+    std::cout << "Big:  " << totalBigEnemiesDefeated << "/" << totalBigEnemies << std::endl;
+    std::cout << "Medium:  " << totalMediumEnemiesDefeated << "/" << totalMediumEnemies << std::endl;
+    std::cout << "Small:  " << totalSmallEnemiesDefeated << "/" << totalSmallEnemies << std::endl;
+}
+
+void Game::IncrementEnemyReport(Enemy& enemy, int& currentTotal, int& currentTotalDefeated)
+{
+    currentTotal++;
+
+    if(enemy.IsDead())
+    {
+        currentTotalDefeated++;
+    }
+}
+
