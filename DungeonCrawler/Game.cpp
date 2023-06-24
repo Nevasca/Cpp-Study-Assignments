@@ -19,17 +19,12 @@ Game::Game(const int seed)
 
 void Game::Start()
 {
-    std::string playerName;
-    
-    std::cout << "How should I call you?" << std::endl;
-    std::cin >> playerName;
+    std::string playerName = AskPlayerName();
 
     std::cout << "Welcome to the challenge, " << playerName << std::endl;
 
-    int totalEnemies;
-    std::cout << "How many enemies do you dare to face?" << std::endl;
-    std::cin >> totalEnemies;
-
+    int totalEnemies = AskTotalEnemiesToBattle();
+    
     CharacterFactory characterFactory{};
     Character character = characterFactory.Create();
     std::cout << "(Character) " << character.ToString() << std::endl << std::endl;
@@ -49,12 +44,37 @@ void Game::Start()
     }
 
     std::cout << std::endl << std::endl << "------------------ " << std::endl << std::endl << std::endl;
+
+    StartBattle(character, enemies);
+}
+
+std::string Game::AskPlayerName()
+{
+    std::string playerName;
     
-    int totalEnemiesAlive = totalEnemies;
+    std::cout << "How should I call you?" << std::endl;
+    std::cin >> playerName;
+
+    return playerName;
+}
+
+int Game::AskTotalEnemiesToBattle()
+{
+    int totalEnemies;
     
-    while(!character.IsDead() && totalEnemiesAlive > 0)
+    std::cout << "How many enemies do you dare to face?" << std::endl;
+    std::cin >> totalEnemies;
+
+    return totalEnemies;
+}
+
+void Game::StartBattle(Character& character, std::vector<Enemy>& enemies)
+{
+    bool isAnEnemyAlive = true;
+    
+    while(!character.IsDead() && isAnEnemyAlive)
     {
-        totalEnemiesAlive = 0;
+        isAnEnemyAlive = false;
         
         for (Enemy& enemy : enemies)
         {
@@ -62,7 +82,7 @@ void Game::Start()
             
             if(!enemy.IsDead())
             {
-                totalEnemiesAlive++;
+                isAnEnemyAlive = true;
             }
             
             if(character.IsDead())
@@ -73,7 +93,7 @@ void Game::Start()
     }
 
     ShowGameOver(character, enemies);
-
+    
     std::cout << "Press any key to exit. ";
     char exit;
     std::cin >> exit;
@@ -159,4 +179,3 @@ void Game::IncrementEnemyReport(Enemy& enemy, int& currentTotal, int& currentTot
         currentTotalDefeated++;
     }
 }
-
