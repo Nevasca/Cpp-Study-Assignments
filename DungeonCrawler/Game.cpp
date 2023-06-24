@@ -37,16 +37,8 @@ void Game::Start()
         enemies.push_back(enemy);
     }
     
-    std::cout << std::endl << std::endl << "------------------ " << std::endl << std::endl << std::endl;
-    std::cout << "(Character) " << character.ToString() << std::endl << std::endl;
+    ShowStatus(character, enemies);
     
-    for (int i = 0; i < totalEnemies; i++)
-    {
-        std::cout << "(Enemy" << std::to_string(i) << ") " << enemies[i].ToString() << std::endl;
-    }
-
-    std::cout << std::endl << std::endl << "------------------ " << std::endl << std::endl << std::endl;
-
     StartBattle(character, enemies);
 }
 
@@ -68,6 +60,19 @@ int Game::AskTotalEnemiesToBattle()
     std::cin >> totalEnemies;
 
     return totalEnemies;
+}
+
+void Game::ShowStatus(Character& character, std::vector<Enemy>& enemies)
+{
+    std::cout << std::endl << std::endl << "------------------ " << std::endl << std::endl << std::endl;
+    std::cout << "(Character) " << character.ToString() << std::endl << std::endl;
+
+    for (Enemy& enemy : enemies)
+    {
+        std::cout << "(Enemy) " << enemy.ToString() << std::endl;
+    }
+
+    std::cout << std::endl << std::endl << "------------------ " << std::endl << std::endl << std::endl;
 }
 
 void Game::StartBattle(Character& character, std::vector<Enemy>& enemies)

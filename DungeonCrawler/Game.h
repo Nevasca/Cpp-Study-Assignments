@@ -15,6 +15,7 @@ private:
     std::string AskPlayerName();
     int AskTotalEnemiesToBattle();
     void StartBattle(Character& character, std::vector<Enemy>& enemies);
+    void ShowStatus(Character& character, std::vector<Enemy>& enemies);
     void Battle(Character& character, Enemy& enemy);
     void ShowGameOver(Character& character, std::vector<Enemy>& enemies);
     void IncrementEnemyReport(Enemy& enemy, int& currentTotal, int& currentTotalDefeated);
