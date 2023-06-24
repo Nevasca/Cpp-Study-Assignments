@@ -27,8 +27,7 @@ void Game::Start()
     
     CharacterFactory characterFactory{};
     Character character = characterFactory.Create();
-    std::cout << "(Character) " << character.ToString() << std::endl << std::endl;
-
+    
     EnemyFactory enemyFactory{};
     std::vector<Enemy> enemies{};
     
@@ -37,6 +36,9 @@ void Game::Start()
         Enemy enemy = enemyFactory.Create();
         enemies.push_back(enemy);
     }
+    
+    std::cout << std::endl << std::endl << "------------------ " << std::endl << std::endl << std::endl;
+    std::cout << "(Character) " << character.ToString() << std::endl << std::endl;
     
     for (int i = 0; i < totalEnemies; i++)
     {
@@ -93,10 +95,13 @@ void Game::StartBattle(Character& character, std::vector<Enemy>& enemies)
     }
 
     ShowGameOver(character, enemies);
-    
-    std::cout << "Press any key to exit. ";
-    char exit;
-    std::cin >> exit;
+
+    bool restartGame = AskRestartGame();
+
+    if(restartGame)
+    {
+        Start();
+    }
 }
 
 void Game::Battle(Character& character, Enemy& enemy)
@@ -167,7 +172,7 @@ void Game::ShowGameOver(Character& character, std::vector<Enemy>& enemies)
     std::cout << "Enemies defeated:" << std::endl;
     std::cout << "Big:  " << totalBigEnemiesDefeated << "/" << totalBigEnemies << std::endl;
     std::cout << "Medium:  " << totalMediumEnemiesDefeated << "/" << totalMediumEnemies << std::endl;
-    std::cout << "Small:  " << totalSmallEnemiesDefeated << "/" << totalSmallEnemies << std::endl;
+    std::cout << "Small:  " << totalSmallEnemiesDefeated << "/" << totalSmallEnemies << std::endl << std::endl << std::endl;
 }
 
 void Game::IncrementEnemyReport(Enemy& enemy, int& currentTotal, int& currentTotalDefeated)
@@ -178,4 +183,15 @@ void Game::IncrementEnemyReport(Enemy& enemy, int& currentTotal, int& currentTot
     {
         currentTotalDefeated++;
     }
+}
+
+bool Game::AskRestartGame()
+{
+    std::cout << "Would you like to restart? [y/n] ";
+    char restart;
+    std::cin >> restart;
+    
+    std::cout << std::endl << std::endl;
+
+    return restart == 'y' || restart == 'Y';
 }
