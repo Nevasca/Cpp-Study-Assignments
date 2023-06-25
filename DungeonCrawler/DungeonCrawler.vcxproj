@@ -158,6 +158,7 @@
     <ClCompile Include="DungeonCrawler.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
+    <ClCompile Include="EnemiesReport.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="CharacterFactory.cpp" />
   </ItemGroup>
@@ -165,6 +166,8 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyFactory.h" />
+    <ClInclude Include="EnemiesReport.h" />
+    <ClInclude Include="EnemyReportEntry.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="CharacterFactory.h" />
     <ClInclude Include="Sizes.h" />

@@ -18,6 +18,5 @@ private:
     void ShowStatus(Character& character, std::vector<Enemy>& enemies);
     void Battle(Character& character, Enemy& enemy);
     void ShowGameOver(Character& character, std::vector<Enemy>& enemies);
-    void IncrementEnemyReport(Enemy& enemy, int& currentTotal, int& currentTotalDefeated);
     bool AskRestartGame();
 };

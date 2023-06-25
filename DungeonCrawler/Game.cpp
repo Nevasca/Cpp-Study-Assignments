@@ -4,6 +4,7 @@
 #include <vector>
 #include "Character.h"
 #include "CharacterFactory.h"
+#include "EnemiesReport.h"
 #include "Enemy.h"
 #include "EnemyFactory.h"
 
@@ -150,44 +151,16 @@ void Game::ShowGameOver(Character& character, std::vector<Enemy>& enemies)
     {
         std::cout << "You won!" << std::endl;
     }
-
-    int totalBigEnemies = 0;
-    int totalBigEnemiesDefeated = 0;
-    int totalMediumEnemies = 0;
-    int totalMediumEnemiesDefeated = 0;
-    int totalSmallEnemies = 0;
-    int totalSmallEnemiesDefeated = 0;
+    
+    EnemiesReport enemiesReport{};
 
     for (Enemy& enemy : enemies)
     {
-        switch (enemy.Size)
-        {
-            case Sizes::Big:
-                IncrementEnemyReport(enemy, totalBigEnemies, totalBigEnemiesDefeated);
-                break;
-            case Sizes::Medium:
-                IncrementEnemyReport(enemy, totalMediumEnemies, totalMediumEnemiesDefeated);
-                break;
-            case Sizes::Small:
-                IncrementEnemyReport(enemy, totalSmallEnemies, totalSmallEnemiesDefeated);
-                break;
-        }    
+        enemiesReport.Add(enemy);
     }
 
     std::cout << "Enemies defeated:" << std::endl;
-    std::cout << "Big:  " << totalBigEnemiesDefeated << "/" << totalBigEnemies << std::endl;
-    std::cout << "Medium:  " << totalMediumEnemiesDefeated << "/" << totalMediumEnemies << std::endl;
-    std::cout << "Small:  " << totalSmallEnemiesDefeated << "/" << totalSmallEnemies << std::endl << std::endl << std::endl;
-}
-
-void Game::IncrementEnemyReport(Enemy& enemy, int& currentTotal, int& currentTotalDefeated)
-{
-    currentTotal++;
-
-    if(enemy.IsDead())
-    {
-        currentTotalDefeated++;
-    }
+    std::cout << enemiesReport.ToString() << std::endl;
 }
 
 bool Game::AskRestartGame()
