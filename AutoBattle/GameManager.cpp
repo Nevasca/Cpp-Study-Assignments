@@ -30,6 +30,8 @@ void GameManager::Restart()
     
     mPlayer = nullptr;
     mCharacters.clear();
+
+    delete mBattlefield;
     
     mCurrentTurn = 1;
     mTotalEnemies = 1;

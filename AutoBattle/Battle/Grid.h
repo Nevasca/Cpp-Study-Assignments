@@ -7,6 +7,7 @@ class Grid
 public:
     Grid() = default;
     Grid(int rows, int columns);
+    ~Grid();
 
     GridBox* GetRandomAvailableLocation();
     GridBox* GetBoxAt(const Position& position);

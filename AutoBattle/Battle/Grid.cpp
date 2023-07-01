@@ -20,6 +20,21 @@ Grid::Grid(int rows, int columns)
     std::cout << "The battlefield has been created" << std::endl;
 }
 
+Grid::~Grid()
+{
+    for (int y = 0; y < YLength; ++y)
+    {
+        for (int x = 0; x < XLength; ++x)
+        {
+            delete mBoxes[y][x];
+        }
+        
+        delete mBoxes[y];
+    }
+    
+    delete mBoxes;
+}
+
 GridBox* Grid::GetRandomAvailableLocation()
 {
     int i = 0;
