@@ -155,6 +155,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AutoBattle.cpp" />
+    <ClCompile Include="Battle\Battlefield.cpp" />
+    <ClCompile Include="Battle\Grid.cpp" />
+    <ClCompile Include="Battle\GridBox.cpp" />
+    <ClCompile Include="Characters\Character.cpp" />
+    <ClCompile Include="Characters\CharacterFactory.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Helpers\Utility.cpp" />
+    <ClCompile Include="Position.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Battle\Battlefield.h" />
+    <ClInclude Include="Battle\Grid.h" />
+    <ClInclude Include="Battle\GridBox.h" />
+    <ClInclude Include="Characters\Character.h" />
+    <ClInclude Include="Characters\CharacterClass.h" />
+    <ClInclude Include="Characters\CharacterFactory.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Helpers\Utility.h" />
+    <ClInclude Include="Position.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
