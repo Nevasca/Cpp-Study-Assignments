@@ -9,13 +9,13 @@ class Character;
 class Battlefield
 {
 public:
-    Battlefield(Grid* InGrid);
+    Battlefield(int rows, int columns);
     bool PlaceNewCharacterRandomly(Character* character);
     Character* FindClosestTarget(const Character* character);
     bool MoveCharacterTo(Character* character, const Position& position);
     void RemoveCharacter(Character* character);
     void Draw();
 private:
-    Grid* mGrid{};
+    Grid mGrid{};
     std::vector<Character*> mCharacters{};
 };

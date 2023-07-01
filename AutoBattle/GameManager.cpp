@@ -53,10 +53,10 @@ void GameManager::CreateBattlefield()
 {
     std::cout << "Time to chose where you are going to battle" << std::endl;
 
-    int columns = Utility::AskPositiveNumber("How many columns (X)?\n", 1);
     int rows = Utility::AskPositiveNumber("How many rows (Y)?\n", 1);
+    int columns = Utility::AskPositiveNumber("How many columns (X)?\n", 1);
 
-    mBattlefield = new Battlefield{new Grid{rows, columns}};
+    mBattlefield = new Battlefield{rows, columns};
 }
 
 CharacterClass GameManager::GetPlayerChoice()

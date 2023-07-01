@@ -2,14 +2,14 @@
 
 #include <iostream>
 
-Battlefield::Battlefield(Grid* InGrid)
-    : mGrid(InGrid)
+Battlefield::Battlefield(int rows, int columns)
+    : mGrid(Grid{rows, columns})
 {
 }
 
 bool Battlefield::PlaceNewCharacterRandomly(Character* character)
 {
-    GridBox* randomLocation = mGrid->GetRandomAvailableLocation();
+    GridBox* randomLocation = mGrid.GetRandomAvailableLocation();
 
     if(randomLocation == nullptr)
     {
@@ -54,18 +54,18 @@ Character* Battlefield::FindClosestTarget(const Character* character)
 
 bool Battlefield::MoveCharacterTo(Character* character, const Position& position)
 {
-    if(!mGrid->IsValidPosition(position))
+    if(!mGrid.IsValidPosition(position))
     {
         return false;
     }
 
-    if(mGrid->IsPositionOccupied(position))
+    if(mGrid.IsPositionOccupied(position))
     {
         return false;
     }
 
     character->CurrentBox->SetOccupied(false);
-    character->CurrentBox = mGrid->GetBoxAt(position);
+    character->CurrentBox = mGrid.GetBoxAt(position);
     character->CurrentBox->SetOccupied(true, std::to_string(character->Index));
 
     return true;
@@ -79,5 +79,5 @@ void Battlefield::RemoveCharacter(Character* character)
 
 void Battlefield::Draw()
 {
-    mGrid->Draw();
+    mGrid.Draw();
 }
