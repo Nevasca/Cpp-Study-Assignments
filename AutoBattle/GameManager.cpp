@@ -23,7 +23,14 @@ void GameManager::Restart()
 {
     std::cout << std::endl << std::endl;
 
+    for (const Character* character : mCharacters)
+    {
+        delete character;
+    }
+    
+    mPlayer = nullptr;
     mCharacters.clear();
+    
     mCurrentTurn = 1;
     mTotalEnemies = 1;
 
