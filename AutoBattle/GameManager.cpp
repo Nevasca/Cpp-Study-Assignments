@@ -62,8 +62,8 @@ void GameManager::CreateBattlefield()
 {
     std::cout << "Time to chose where you are going to battle" << std::endl;
 
-    int rows = Utility::AskPositiveNumber("How many rows (Y)?\n", 1);
-    int columns = Utility::AskPositiveNumber("How many columns (X)?\n", 1);
+    int rows = Utility::AskNumber("How many rows (Y)?\n", 1);
+    int columns = Utility::AskNumber("How many columns (X)?\n", 1);
 
     mBattlefield = new Battlefield{rows, columns};
 }
@@ -109,7 +109,7 @@ CharacterClass GameManager::GetPlayerChoice()
 
 void GameManager::AskTotalEnemies()
 {
-    mTotalEnemies = Utility::AskPositiveNumber("How many enemies are you prepared to face?\n", 1);
+    mTotalEnemies = Utility::AskNumber("How many enemies are you prepared to face?\n", 1);
 
     std::cout << std::endl;
 }

@@ -4,5 +4,5 @@
 class Utility
 {
 public:
-    static int AskPositiveNumber(const std::string& message, const int& min);
+    static int AskNumber(const std::string& message, const int& min);
 };

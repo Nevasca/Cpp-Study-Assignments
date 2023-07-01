@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-int Utility::AskPositiveNumber(const std::string& message, const int& min)
+int Utility::AskNumber(const std::string& message, const int& min)
 {
     int number = -1;
 
