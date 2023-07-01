@@ -6,14 +6,15 @@ int Utility::AskPositiveNumber(const std::string& message, const int& min)
 {
     int number = -1;
 
-    do
+    std::cout << message << std::endl;
+
+    while (!(std::cin >> number) || number < min)
     {
-        std::cout << message << std::endl;
-        
         std::cin.clear();
-        std::cin >> number;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        
+        std::cout << message << std::endl;
     }
-    while (!std::cin && number < min);
 
     return number;
 }
