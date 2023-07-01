@@ -172,7 +172,7 @@ void GameManager::NextTurn()
 
 void GameManager::HandleTurnEnded()
 {
-    Character* winner = HasOnlyOneLeft();
+    Character* winner = GetLastSurvivor();
 
     if(winner != nullptr)
     {
@@ -191,7 +191,7 @@ void GameManager::HandleTurnEnded()
     NextTurn();
 }
 
-Character* GameManager::HasOnlyOneLeft()
+Character* GameManager::GetLastSurvivor()
 {
     Character* winner = nullptr;
     int totalAlive = 0;

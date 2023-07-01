@@ -19,7 +19,7 @@ private:
     bool PlaceCharacters();
     void NextTurn();
     void HandleTurnEnded();
-    Character* HasOnlyOneLeft();
+    Character* GetLastSurvivor();
     void ShowGameOver(Character* winner);
     void AskForReplay();
 
