@@ -10,12 +10,13 @@ class Battlefield
 {
 public:
     Battlefield(int rows, int columns);
-    bool PlaceNewCharacterRandomly(Character* character);
-    Character* FindClosestTarget(const Character* character);
-    bool MoveCharacterTo(Character* character, const Position& position);
-    void RemoveCharacter(Character* character);
+    ~Battlefield();
+    bool PlaceNewCharacterRandomly(const std::shared_ptr<Character>& character);
+    std::weak_ptr<Character> FindClosestTarget(const Character& character);
+    bool MoveCharacterTo(Character& character, const Position& position);
+    void RemoveCharacter(Character* characterToRemove);
     void Draw();
 private:
     Grid mGrid{};
-    std::vector<Character*> mCharacters{};
+    std::vector<std::weak_ptr<Character>> mCharacters{};
 };

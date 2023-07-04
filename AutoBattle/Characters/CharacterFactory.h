@@ -5,8 +5,8 @@
 class CharacterFactory
 {
 public:
-    static Character* CreateCharacter(CharacterClass characterClass);
-    static Character* CreateRandomCharacter();
+    static std::shared_ptr<Character> CreateCharacter(CharacterClass characterClass);
+    static std::shared_ptr<Character> CreateRandomCharacter();
 
 private:
     static std::string GetRandomName();

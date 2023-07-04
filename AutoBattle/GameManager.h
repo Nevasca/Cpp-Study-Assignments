@@ -20,12 +20,12 @@ private:
     void NextTurn();
     void HandleTurnEnded();
     Character* GetLastSurvivor();
-    void ShowGameOver(Character* winner);
+    void ShowGameOver(const Character& winner);
     void AskForReplay();
 
-    Battlefield* mBattlefield{};
-    Character* mPlayer{};
-    std::vector<Character*> mCharacters{};
+    std::shared_ptr<Battlefield> mBattlefield{};
+    std::shared_ptr<Character> mPlayer{};
+    std::vector<std::shared_ptr<Character>> mCharacters{};
     int mCurrentTurn = 1;
     int mTotalEnemies = 1;
 };

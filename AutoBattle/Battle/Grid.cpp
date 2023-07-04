@@ -5,16 +5,17 @@
 Grid::Grid(int rows, int columns)
     : XLength(columns), YLength(rows)
 {
-    mBoxes = new GridBox**[rows];
-
     for (int y = 0; y < rows; ++y)
     {
-        mBoxes[y] = new GridBox*[columns];
+        std::vector<std::shared_ptr<GridBox>> row{};
+        row.reserve(columns);
         
         for (int x = 0; x < columns; ++x)
         {
-            mBoxes[y][x] = new GridBox{Position{x, y}};
+            row.push_back(std::make_shared<GridBox>(Position{x, y}));
         }
+        
+        mBoxes.push_back(row);
     }
 
     std::cout << "The battlefield has been created" << std::endl;
@@ -22,24 +23,14 @@ Grid::Grid(int rows, int columns)
 
 Grid::~Grid()
 {
-    for (int y = 0; y < YLength; ++y)
-    {
-        for (int x = 0; x < XLength; ++x)
-        {
-            delete mBoxes[y][x];
-        }
-        
-        delete mBoxes[y];
-    }
-    
-    delete mBoxes;
+    std::cout << "\n ||| Destroying grid |||\n";
 }
 
-GridBox* Grid::GetRandomAvailableLocation()
+std::shared_ptr<GridBox> Grid::GetRandomAvailableLocation()
 {
     int i = 0;
     int maxIterations = YLength * XLength;
-    GridBox* randomLocation;
+    std::shared_ptr<GridBox> randomLocation{};
 
     do
     {
@@ -55,7 +46,7 @@ GridBox* Grid::GetRandomAvailableLocation()
     return randomLocation;
 }
 
-GridBox* Grid::GetRandomLocation()
+std::shared_ptr<GridBox> Grid::GetRandomLocation()
 {
     int randomRow = rand() % YLength;
     int randomColumn = rand() % XLength;
@@ -63,7 +54,7 @@ GridBox* Grid::GetRandomLocation()
     return mBoxes[randomRow][randomColumn];
 }
 
-GridBox* Grid::GetBoxAt(const Position& position)
+std::shared_ptr<GridBox> Grid::GetBoxAt(const Position& position)
 {
     return mBoxes[position.Y][position.X];
 }

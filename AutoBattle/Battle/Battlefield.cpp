@@ -7,9 +7,14 @@ Battlefield::Battlefield(int rows, int columns)
 {
 }
 
-bool Battlefield::PlaceNewCharacterRandomly(Character* character)
+Battlefield::~Battlefield()
 {
-    GridBox* randomLocation = mGrid.GetRandomAvailableLocation();
+    std::cout << "\n ||| Destroying battlefield |||\n";
+}
+
+bool Battlefield::PlaceNewCharacterRandomly(const std::shared_ptr<Character>& character)
+{
+    std::shared_ptr<GridBox> randomLocation = mGrid.GetRandomAvailableLocation();
 
     if(randomLocation == nullptr)
     {
@@ -18,7 +23,7 @@ bool Battlefield::PlaceNewCharacterRandomly(Character* character)
     }
 
     randomLocation->SetOccupied(true, std::to_string(character->Index));
-    character->SetBattlefield(this, randomLocation);
+    character->CurrentBox = randomLocation;
     mCharacters.push_back(character);
 
     std::cout << character->ToString() << " placed at " << randomLocation->Position.ToString() << std::endl;
@@ -26,19 +31,21 @@ bool Battlefield::PlaceNewCharacterRandomly(Character* character)
     return true;
 }
 
-Character* Battlefield::FindClosestTarget(const Character* character)
+std::weak_ptr<Character> Battlefield::FindClosestTarget(const Character& character)
 {
-    Character* closestTarget = nullptr;
+    std::weak_ptr<Character> closestTarget{};
     int closestDistance = -1;
 
-    for (Character* target : mCharacters)
+    for (const std::weak_ptr<Character>& targetPtr : mCharacters)
     {
-        if(target->Index == character->Index)
+        auto target = targetPtr.lock();
+        
+        if(target->Index == character.Index)
         {
             continue;
         }
 
-        int distance = Position::Distance(character->GetPosition(), target->GetPosition());
+        int distance = Position::Distance(character.GetPosition(), target->GetPosition());
 
         if(closestDistance != -1 && distance > closestDistance)
         {
@@ -52,7 +59,7 @@ Character* Battlefield::FindClosestTarget(const Character* character)
     return closestTarget;
 }
 
-bool Battlefield::MoveCharacterTo(Character* character, const Position& position)
+bool Battlefield::MoveCharacterTo(Character& character, const Position& position)
 {
     if(!mGrid.IsValidPosition(position))
     {
@@ -64,17 +71,22 @@ bool Battlefield::MoveCharacterTo(Character* character, const Position& position
         return false;
     }
 
-    character->CurrentBox->SetOccupied(false);
-    character->CurrentBox = mGrid.GetBoxAt(position);
-    character->CurrentBox->SetOccupied(true, std::to_string(character->Index));
+    character.CurrentBox->SetOccupied(false);
+    character.CurrentBox = mGrid.GetBoxAt(position);
+    character.CurrentBox->SetOccupied(true, std::to_string(character.Index));
 
     return true;
 }
 
-void Battlefield::RemoveCharacter(Character* character)
+void Battlefield::RemoveCharacter(Character* characterToRemove)
 {
-    character->CurrentBox->SetOccupied(false);
-    mCharacters.erase(std::remove(mCharacters.begin(), mCharacters.end(), character), mCharacters.end());
+    characterToRemove->CurrentBox->SetOccupied(false);
+
+    mCharacters.erase(std::remove_if(mCharacters.begin(), mCharacters.end(),
+        [characterToRemove](const std::weak_ptr<Character>& character)
+        {
+            return character.lock().get() == characterToRemove;
+        }), mCharacters.end());
 }
 
 void Battlefield::Draw()

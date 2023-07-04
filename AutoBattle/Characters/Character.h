@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <string>
 
 #include "CharacterClass.h"
@@ -11,12 +12,14 @@ class Character
 public:
     Character() = default;
     Character(CharacterClass InClass);
+
+    ~Character();
     
     void StartTurn();
     void Attack();
     bool TakeDamage(const float& amount);
     bool IsDead();
-    void SetBattlefield(Battlefield* battlefield, GridBox* startBox);
+    void SetBattlefield(const std::shared_ptr<Battlefield>& battlefield);
     Position GetPosition() const;
     std::string ToString();
     
@@ -26,7 +29,7 @@ public:
     float Health = 0.f;
     float BaseDamage = 0.f;
     float DamageMultiplier = 1.f;
-    GridBox* CurrentBox = nullptr;
+    std::shared_ptr<GridBox> CurrentBox{};
 
 private:
     void Die();
@@ -34,6 +37,6 @@ private:
     bool WalkTo(const Position& direction, const std::string& directionName);
     bool IsFacingTarget();
 
-    Character* mTarget = nullptr;
-    Battlefield* mBattlefield = nullptr;
+    std::weak_ptr<Character> mTarget{};
+    std::shared_ptr<Battlefield> mBattlefield{};
 };

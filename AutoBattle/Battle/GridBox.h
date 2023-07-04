@@ -8,6 +8,7 @@ class GridBox
 public:
     GridBox() = default;
     GridBox(Position InPosition);
+    ~GridBox();
     void SetOccupied(bool isOccupied, const std::string& marker = "");
     bool IsOccupied();
     std::string ToString();

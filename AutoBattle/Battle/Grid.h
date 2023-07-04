@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
 #include "GridBox.h"
 
 class Grid
@@ -9,8 +12,8 @@ public:
     Grid(int rows, int columns);
     ~Grid();
 
-    GridBox* GetRandomAvailableLocation();
-    GridBox* GetBoxAt(const Position& position);
+    std::shared_ptr<GridBox> GetRandomAvailableLocation();
+    std::shared_ptr<GridBox> GetBoxAt(const Position& position);
     bool IsValidPosition(const Position& position);
     bool IsPositionOccupied(const Position& position);
     void Draw();
@@ -19,7 +22,6 @@ public:
     const int YLength = 0;
 
 private:
-    GridBox* GetRandomLocation();
-    
-    GridBox*** mBoxes;
+    std::shared_ptr<GridBox> GetRandomLocation();
+    std::vector<std::vector<std::shared_ptr<GridBox>>> mBoxes{};
 };

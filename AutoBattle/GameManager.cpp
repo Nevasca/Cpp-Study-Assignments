@@ -23,15 +23,10 @@ void GameManager::Restart()
 {
     std::cout << std::endl << std::endl;
 
-    for (const Character* character : mCharacters)
-    {
-        delete character;
-    }
+    mBattlefield.reset();
     
-    mPlayer = nullptr;
     mCharacters.clear();
-
-    delete mBattlefield;
+    mPlayer.reset();
     
     mCurrentTurn = 1;
     mTotalEnemies = 1;
@@ -65,7 +60,7 @@ void GameManager::CreateBattlefield()
     int rows = Utility::AskNumber("How many rows (Y)?\n", 1);
     int columns = Utility::AskNumber("How many columns (X)?\n", 1);
 
-    mBattlefield = new Battlefield{rows, columns};
+    mBattlefield = std::make_shared<Battlefield>(rows, columns);
 }
 
 CharacterClass GameManager::GetPlayerChoice()
@@ -142,7 +137,7 @@ void GameManager::CreateEnemyCharacters()
 {
     for (int i = 0; i < mTotalEnemies; ++i)
     {
-        Character* enemyCharacter = CharacterFactory::CreateRandomCharacter();
+        std::shared_ptr<Character> enemyCharacter = CharacterFactory::CreateRandomCharacter();
         enemyCharacter->Index = i + 1;
         mCharacters.push_back(enemyCharacter);
 
@@ -154,8 +149,10 @@ void GameManager::CreateEnemyCharacters()
 
 bool GameManager::PlaceCharacters()
 {
-    for (Character* character : mCharacters)
+    for (const std::shared_ptr<Character>& character : mCharacters)
     {
+        character->SetBattlefield(mBattlefield);
+        
         if(!mBattlefield->PlaceNewCharacterRandomly(character))
         {
             return false;
@@ -169,7 +166,7 @@ void GameManager::NextTurn()
 {
     std::cout << "-- TURN " << std::to_string(mCurrentTurn) << " --" << std::endl << std::endl;
 
-    for (Character* character : mCharacters)
+    for (const std::shared_ptr<Character>& character : mCharacters)
     {
         character->StartTurn();
     }
@@ -185,10 +182,10 @@ void GameManager::HandleTurnEnded()
 
     if(winner != nullptr)
     {
-        ShowGameOver(winner);
+        ShowGameOver(*winner);
         return;
     }
-
+    
     std::cout << std::endl << std::endl;
     std::cout << "Click on any key to start the next turn... ";
 
@@ -205,7 +202,7 @@ Character* GameManager::GetLastSurvivor()
     Character* winner = nullptr;
     int totalAlive = 0;
 
-    for (Character* character : mCharacters)
+    for (const std::shared_ptr<Character>& character : mCharacters)
     {
         if(character->IsDead())
         {
@@ -213,26 +210,26 @@ Character* GameManager::GetLastSurvivor()
         }
 
         totalAlive++;
-        winner = character;
+        winner = character.get();
     }
 
     return totalAlive == 1 ? winner : nullptr;
 }
 
-void GameManager::ShowGameOver(Character* winner)
+void GameManager::ShowGameOver(const Character& winner)
 {
     std::cout << std::endl << std::endl;
-    bool hasPlayerWon = winner->Index == mPlayer->Index;
+    bool hasPlayerWon = winner.Index == mPlayer->Index;
 
     if(hasPlayerWon)
     {
-        std::cout << "You have won the battle, " << winner->Name << "!" << std::endl;
-        std::cout << "You are the best living " << ConvertClassToString(winner->Class) << std::endl;
+        std::cout << "You have won the battle, " << winner.Name << "!" << std::endl;
+        std::cout << "You are the best living " << ConvertClassToString(winner.Class) << std::endl;
     }
     else
     {
-        std::cout << "You have lost the battle... " << winner->Name << " survived." << std::endl;
-        std::cout << "What a tough " << ConvertClassToString(winner->Class) << "!" << std::endl;
+        std::cout << "You have lost the battle... " << winner.Name << " survived." << std::endl;
+        std::cout << "What a tough " << ConvertClassToString(winner.Class) << "!" << std::endl;
     }
 
     AskForReplay();

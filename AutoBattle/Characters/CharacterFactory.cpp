@@ -1,8 +1,8 @@
 #include "CharacterFactory.h"
 
-Character* CharacterFactory::CreateCharacter(CharacterClass characterClass)
+std::shared_ptr<Character> CharacterFactory::CreateCharacter(CharacterClass characterClass)
 {
-    auto* character = new Character{characterClass};
+    std::shared_ptr<Character> character = std::make_shared<Character>(characterClass);
     character->Health = 100.f;
     character->BaseDamage = 20.f;
     character->Name = GetRandomName();
@@ -11,7 +11,7 @@ Character* CharacterFactory::CreateCharacter(CharacterClass characterClass)
     return character;
 }
 
-Character* CharacterFactory::CreateRandomCharacter()
+std::shared_ptr<Character> CharacterFactory::CreateRandomCharacter()
 {
     constexpr CharacterClass classes[]{CharacterClass::Paladin, CharacterClass::Warrior, CharacterClass::Cleric, CharacterClass::Archer};
     

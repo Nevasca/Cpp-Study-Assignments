@@ -7,6 +7,11 @@ Character::Character(CharacterClass InClass)
 {
 }
 
+Character::~Character()
+{
+    std::cout << "\n ||| Destroying character " << this->ToString() << " |||\n";
+}
+
 void Character::StartTurn()
 {
     if(IsDead())
@@ -14,7 +19,13 @@ void Character::StartTurn()
         return;
     }
 
-    mTarget = mBattlefield->FindClosestTarget(this);
+    mTarget = mBattlefield->FindClosestTarget(*this);
+
+    if(mTarget.expired())
+    {
+        std::cout << "No closest target found for " << this->ToString() << std::endl;
+        return;
+    }
 
     if(IsFacingTarget())
     {
@@ -28,18 +39,25 @@ void Character::StartTurn()
 
 void Character::Attack()
 {
+    if(mTarget.expired())
+    {
+        std::cout << "Character " << this->ToString() << " has no valid target" << std::endl;
+        return;
+    }
+    
     auto randomDamage = static_cast<float>(rand() % static_cast<int>(BaseDamage));
     randomDamage *= DamageMultiplier;
 
-    bool hasKilledTarget = mTarget->TakeDamage(randomDamage);
+    auto target = mTarget.lock();
+    bool hasKilledTarget = target->TakeDamage(randomDamage);
 
     if(hasKilledTarget)
     {
-        std::cout << this->ToString() << " did " << randomDamage << " and killed " << mTarget->ToString() << std::endl;
+        std::cout << this->ToString() << " did " << randomDamage << " and killed " << target->ToString() << std::endl;
     }
     else
     {
-        std::cout << this->ToString() << " is attacking " << mTarget->ToString() << " and did " << randomDamage << " damage (" << mTarget->Health << " left)" << std::endl;
+        std::cout << this->ToString() << " is attacking " << target->ToString() << " and did " << randomDamage << " damage (" << target->Health << " left)" << std::endl;
     }
 }
 
@@ -67,10 +85,9 @@ bool Character::IsDead()
     return Health <= 0.f;
 }
 
-void Character::SetBattlefield(Battlefield* battlefield, GridBox* startBox)
+void Character::SetBattlefield(const std::shared_ptr<Battlefield>& battlefield)
 {
     mBattlefield = battlefield;
-    CurrentBox = startBox;
 }
 
 Position Character::GetPosition() const
@@ -92,7 +109,9 @@ void Character::Die()
 void Character::MoveCloserToTarget()
 {
     Position position = GetPosition();
-    Position targetPosition = mTarget->GetPosition();
+
+    auto target = mTarget.lock();
+    Position targetPosition = target->GetPosition();
 
     if(position.X > targetPosition.X && WalkTo(Position::Left, "left"))
     {
@@ -122,7 +141,7 @@ bool Character::WalkTo(const Position& direction, const std::string& directionNa
 {
     Position desiredPosition = GetPosition() + direction;
 
-    if(!mBattlefield->MoveCharacterTo(this, desiredPosition))
+    if(!mBattlefield->MoveCharacterTo(*this, desiredPosition))
     {
         return false;
     }
@@ -135,7 +154,8 @@ bool Character::WalkTo(const Position& direction, const std::string& directionNa
 
 bool Character::IsFacingTarget()
 {
-    Position offset = mTarget->GetPosition() - GetPosition();
+    auto target = mTarget.lock();
+    Position offset = target->GetPosition() - GetPosition();
 
     return offset == Position::Right
         || offset == Position::Left
