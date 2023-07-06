@@ -6,6 +6,8 @@ class GameManager
 {
 public:
     void Start();
+    void Update();
+    bool IsFinished();
 
 private:
     void Restart();
@@ -28,4 +30,5 @@ private:
     std::vector<std::shared_ptr<Character>> mCharacters{};
     int mCurrentTurn = 1;
     int mTotalEnemies = 1;
+    bool mIsFinished = false;
 };

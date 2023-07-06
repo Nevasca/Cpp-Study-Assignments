@@ -12,11 +12,18 @@ void GameManager::Start()
     if(!Setup())
     {
         std::cout << "It was not possible to setup the game";
+        mIsFinished = true;
+        
         return;
     }
 
     mBattlefield->Draw();
+}
+
+void GameManager::Update()
+{
     NextTurn();
+    HandleTurnEnded();
 }
 
 void GameManager::Restart()
@@ -172,8 +179,6 @@ void GameManager::NextTurn()
     }
 
     mCurrentTurn++;
-
-    HandleTurnEnded();
 }
 
 void GameManager::HandleTurnEnded()
@@ -193,8 +198,11 @@ void GameManager::HandleTurnEnded()
     std::cin >> key;
     
     std::cout << std::endl << std::endl;
+}
 
-    NextTurn();
+bool GameManager::IsFinished()
+{
+    return mIsFinished;
 }
 
 Character* GameManager::GetLastSurvivor()
@@ -246,5 +254,9 @@ void GameManager::AskForReplay()
     if(replay == 'Y' || replay == 'y')
     {
         Restart();
+    }
+    else
+    {
+        mIsFinished = true;
     }
 }
