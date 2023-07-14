@@ -1,6 +1,7 @@
 #include "Grid.h"
 
 #include <iostream>
+#include <sstream>
 
 Grid::Grid(int rows, int columns)
     : XLength(columns), YLength(rows)
@@ -66,19 +67,22 @@ bool Grid::IsPositionOccupied(const Position& position)
 
 void Grid::Draw()
 {
-    std::cout << std::endl << std::endl;
+    std::stringstream stream{};
+    stream << std::endl << std::endl;
 
     for (int y = 0; y < YLength; ++y)
     {
         for (int x = 0; x < XLength; ++x)
         {
-            std::cout << mBoxes[y][x]->ToString();
+            stream << mBoxes[y][x]->ToString();
         }
 
-        std::cout << std::endl;
+        stream << std::endl;
     }
 
-    std::cout << std::endl << std::endl;
+    stream << std::endl << std::endl;
+    
+    std::cout << stream.str();
 }
 
 bool Grid::IsValidPosition(const Position& position)
