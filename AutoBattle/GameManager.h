@@ -5,6 +5,9 @@
 class GameManager
 {
 public:
+    GameManager();
+    GameManager(int seed);
+    
     void Start();
     void Update();
     bool IsFinished();

@@ -7,6 +7,16 @@
 #include "Characters/CharacterFactory.h"
 #include "Helpers/Utility.h"
 
+GameManager::GameManager()
+{
+    srand(static_cast<unsigned int>(time(nullptr)));
+}
+
+GameManager::GameManager(int seed)
+{
+    srand(seed);
+}
+
 void GameManager::Start()
 {
     if(!Setup())
