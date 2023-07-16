@@ -22,7 +22,7 @@ bool Battlefield::PlaceNewCharacterRandomly(const std::shared_ptr<Character>& ch
         return false;
     }
 
-    randomLocation->SetOccupied(true, std::to_string(character->Index));
+    randomLocation->SetOccupied(true, std::to_string(character->Id));
     character->CurrentBox = randomLocation;
     mCharacters.push_back(character);
 
@@ -40,7 +40,12 @@ std::weak_ptr<Character> Battlefield::FindClosestTarget(const Character& charact
     {
         auto target = targetPtr.lock();
         
-        if(target->Index == character.Index)
+        if(target->Id == character.Id)
+        {
+            continue;
+        }
+
+        if(character.IsFromSameTeam(*target))
         {
             continue;
         }
@@ -73,7 +78,7 @@ bool Battlefield::MoveCharacterTo(Character& character, const Position& position
 
     character.CurrentBox->SetOccupied(false);
     character.CurrentBox = mGrid.GetBoxAt(position);
-    character.CurrentBox->SetOccupied(true, std::to_string(character.Index));
+    character.CurrentBox->SetOccupied(true, std::to_string(character.Id));
 
     return true;
 }

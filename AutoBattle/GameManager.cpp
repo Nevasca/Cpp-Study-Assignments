@@ -23,11 +23,22 @@ void GameManager::Start()
 void GameManager::Update()
 {
     NextTurn();
-    HandleTurnEnded();
+    CheckWinCondition();
+    
+    if(mIsFinished)
+    {
+        AskForReplay();
+    }
+    else
+    {
+        PrepareNextTurn();
+    }
 }
 
 void GameManager::Restart()
 {
+    mIsFinished = false;
+    
     std::cout << std::endl << std::endl;
 
     mBattlefield.reset();
@@ -46,16 +57,19 @@ bool GameManager::Setup()
     CreateBattlefield();
     CharacterClass chosenClass = GetPlayerChoice();
     CreatePlayerCharacter(chosenClass);
-    AskTotalEnemies();
+    AskTotalTeams();
+    AskTotalCharacters();
     CreateEnemyCharacters();
+
+    auto rng = std::default_random_engine{};
+    std::shuffle(mCharacters.begin(), mCharacters.end(), rng);
+    
+    SetupCharactersTeams();
 
     if(!PlaceCharacters())
     {
         return false;
     }
-
-    auto rng = std::default_random_engine{};
-    std::shuffle(mCharacters.begin(), mCharacters.end(), rng);
 
     return true;
 }
@@ -80,7 +94,7 @@ CharacterClass GameManager::GetPlayerChoice()
     {
         isValidChoice = true;
 
-        std::cout << "Choose between one of these classes:" << std::endl;
+        std::cout << std::endl << "Choose between one of these classes:" << std::endl;
         std::cout << "[1] Paladin, [2] Warrior, [3] Cleric, [4] Archer" << std::endl;
 
         std::cin >> choice;
@@ -109,11 +123,51 @@ CharacterClass GameManager::GetPlayerChoice()
     return chosenClass;
 }
 
-void GameManager::AskTotalEnemies()
+void GameManager::AskTotalCharacters()
 {
-    mTotalEnemies = Utility::AskNumber("How many enemies are you prepared to face?\n", 1);
+    std::string message{};
+    
+    if(IsTeamMode())
+    {
+        message = "How many enemies or maybe allies are you prepared to face?\n";
+    }
+    else
+    {
+        message = "How many enemies are you prepared to face?\n";
+    }
+    
+    mTotalEnemies = Utility::AskNumber(message, 1);
 
     std::cout << std::endl;
+}
+
+void GameManager::AskTotalTeams()
+{
+    mTotalTeams = Utility::AskNumber("\nHow many teams (1 or less for free for all)?\n", 0);
+
+    std::cout << std::endl;
+}
+
+bool GameManager::IsTeamMode() const
+{
+    return mTotalTeams > 1;
+}
+
+void GameManager::SetupCharactersTeams()
+{
+    if(!IsTeamMode())
+    {
+        return;
+    }
+
+    int teamId = 0;
+    
+    for (const std::shared_ptr<Character>& character : mCharacters)
+    {
+        character->TeamId = teamId;
+
+        teamId = (teamId + 1) % mTotalTeams;
+    }
 }
 
 void GameManager::AskCharacterName()
@@ -130,7 +184,7 @@ void GameManager::AskCharacterName()
 void GameManager::CreatePlayerCharacter(CharacterClass characterClass)
 {
     mPlayer = CharacterFactory::CreateCharacter(characterClass);
-    mPlayer->Index = 0;
+    mPlayer->Id = 0;
 
     mCharacters.push_back(mPlayer);
 
@@ -145,7 +199,7 @@ void GameManager::CreateEnemyCharacters()
     for (int i = 0; i < mTotalEnemies; ++i)
     {
         std::shared_ptr<Character> enemyCharacter = CharacterFactory::CreateRandomCharacter();
-        enemyCharacter->Index = i + 1;
+        enemyCharacter->Id = i + 1;
         mCharacters.push_back(enemyCharacter);
 
         std::cout << enemyCharacter->ToString() << " class choice: " << ConvertClassToString(enemyCharacter->Class) << std::endl;
@@ -181,16 +235,8 @@ void GameManager::NextTurn()
     mCurrentTurn++;
 }
 
-void GameManager::HandleTurnEnded()
+void GameManager::PrepareNextTurn()
 {
-    Character* winner = GetLastSurvivor();
-
-    if(winner != nullptr)
-    {
-        ShowGameOver(*winner);
-        return;
-    }
-    
     std::cout << std::endl << std::endl;
     std::cout << "Click on any key to start the next turn... ";
 
@@ -198,6 +244,30 @@ void GameManager::HandleTurnEnded()
     std::cin >> key;
     
     std::cout << std::endl << std::endl;
+}
+
+void GameManager::CheckWinCondition()
+{
+    if(IsTeamMode())
+    {
+        const int winningTeamId = GetLastSurvivingTeam();
+
+        if(winningTeamId >= 0)
+        {
+            mIsFinished = true;
+            ShowGameOver(winningTeamId);
+        }
+    }
+    else
+    {
+        const Character* winner = GetLastSurvivor();
+
+        if(winner)
+        {
+            mIsFinished = true;
+            ShowGameOver(*winner);
+        }
+    }
 }
 
 bool GameManager::IsFinished()
@@ -224,10 +294,32 @@ Character* GameManager::GetLastSurvivor()
     return totalAlive == 1 ? winner : nullptr;
 }
 
+int GameManager::GetLastSurvivingTeam() const
+{
+    int winningTeamId = -1;
+    
+    for (const std::shared_ptr<Character>& character : mCharacters)
+    {
+        if(character->IsDead())
+        {
+            continue;
+        }
+
+        if(winningTeamId != -1 && character->TeamId != winningTeamId)
+        {
+            return -1;
+        }
+
+        winningTeamId = character->TeamId;
+    }
+
+    return winningTeamId;
+}
+
 void GameManager::ShowGameOver(const Character& winner)
 {
     std::cout << std::endl << std::endl;
-    bool hasPlayerWon = winner.Index == mPlayer->Index;
+    bool hasPlayerWon = winner.Id == mPlayer->Id;
 
     if(hasPlayerWon)
     {
@@ -239,8 +331,24 @@ void GameManager::ShowGameOver(const Character& winner)
         std::cout << "You have lost the battle... " << winner.Name << " survived." << std::endl;
         std::cout << "What a tough " << ConvertClassToString(winner.Class) << "!" << std::endl;
     }
+}
 
-    AskForReplay();
+void GameManager::ShowGameOver(const int& winningTeamId)
+{
+    const bool hasPlayerWon = mPlayer->TeamId == winningTeamId;
+    const std::string playerClass = ConvertClassToString(mPlayer->Class);
+    
+    std::cout << std::endl << std::endl;
+    std::cout << "Team " << winningTeamId << " has won the battle!" << std::endl;
+
+    if(hasPlayerWon)
+    {
+        std::cout << "And you have contributed to their victory. You're an impressive " << playerClass << "!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Your team lost, better luck next time, " << playerClass << "." << std::endl;
+    }
 }
 
 void GameManager::AskForReplay()
@@ -254,9 +362,5 @@ void GameManager::AskForReplay()
     if(replay == 'Y' || replay == 'y')
     {
         Restart();
-    }
-    else
-    {
-        mIsFinished = true;
     }
 }

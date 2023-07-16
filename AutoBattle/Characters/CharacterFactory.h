@@ -5,7 +5,7 @@
 class CharacterFactory
 {
 public:
-    static std::shared_ptr<Character> CreateCharacter(CharacterClass characterClass);
+    static std::shared_ptr<Character> CreateCharacter(const CharacterClass& characterClass);
     static std::shared_ptr<Character> CreateRandomCharacter();
 
 private:

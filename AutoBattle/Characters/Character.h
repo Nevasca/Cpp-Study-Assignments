@@ -20,11 +20,13 @@ public:
     bool TakeDamage(const float& amount);
     bool IsDead();
     void SetBattlefield(const std::shared_ptr<Battlefield>& battlefield);
+    bool IsFromSameTeam(const Character& character) const;
     Position GetPosition() const;
-    std::string ToString();
+    std::string ToString() const;
     
     CharacterClass Class = CharacterClass::Paladin;
-    int Index = 0;
+    int Id = 0;
+    int TeamId = -1;
     std::string Name{};
     float Health = 0.f;
     float BaseDamage = 0.f;

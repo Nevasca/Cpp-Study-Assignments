@@ -90,14 +90,24 @@ void Character::SetBattlefield(const std::shared_ptr<Battlefield>& battlefield)
     mBattlefield = battlefield;
 }
 
+bool Character::IsFromSameTeam(const Character& character) const
+{
+    return TeamId >= 0 && TeamId == character.TeamId;
+}
+
 Position Character::GetPosition() const
 {
     return CurrentBox->Position;
 }
 
-std::string Character::ToString()
+std::string Character::ToString() const
 {
-    return "[" + std::to_string(Index) + "]" + Name;
+    if(TeamId != -1)
+    {
+        return "[" + std::to_string(Id) + " | Team " + std::to_string(TeamId) + "] " + Name;
+    }
+    
+    return "[" + std::to_string(Id) + "] " + Name;
 }
 
 void Character::Die()

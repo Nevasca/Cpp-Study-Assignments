@@ -1,6 +1,6 @@
 #include "CharacterFactory.h"
 
-std::shared_ptr<Character> CharacterFactory::CreateCharacter(CharacterClass characterClass)
+std::shared_ptr<Character> CharacterFactory::CreateCharacter(const CharacterClass& characterClass)
 {
     std::shared_ptr<Character> character = std::make_shared<Character>(characterClass);
     character->Health = 100.f;
