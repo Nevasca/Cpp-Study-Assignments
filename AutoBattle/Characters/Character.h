@@ -19,7 +19,8 @@ public:
     
     void StartTurn();
     bool TakeDamage(const float& amount);
-    bool IsDead();
+    void Heal(const float& amount);
+    bool IsDead() const;
     void SetBattlefield(const std::shared_ptr<Battlefield>& battlefield);
     void SetSkill(const std::shared_ptr<Skill>& skill);
     bool IsFromSameTeam(const Character& character) const;
@@ -33,6 +34,7 @@ public:
     int Id = 0;
     int TeamId = -1;
     std::string Name{};
+    float BaseHealth = 100.f;
     float Health = 0.f;
     float BaseDamage = 0.f;
     float DamageMultiplier = 1.f;

@@ -29,7 +29,7 @@ void ThrowSkill::Cast()
     std::weak_ptr<Character> targetPtr = mCharacter.GetTarget();
     const auto target = targetPtr.lock();
 
-    constexpr float throwDamage = 40.f;
+    constexpr float throwDamage = 30.f;
     const bool hasKilledTarget = target->TakeDamage(throwDamage);
 
     if(hasKilledTarget)

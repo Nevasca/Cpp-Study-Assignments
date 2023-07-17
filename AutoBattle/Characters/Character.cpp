@@ -77,7 +77,12 @@ bool Character::TakeDamage(const float& amount)
     return isDead;
 }
 
-bool Character::IsDead()
+void Character::Heal(const float& amount)
+{
+    Health = std::min(Health + amount, BaseHealth);
+}
+
+bool Character::IsDead() const
 {
     return Health <= 0.f;
 }
