@@ -1,12 +1,20 @@
 #include "CharacterFactory.h"
 
+#include <iostream>
+#include <memory>
+
+#include "SkillFactory.h"
+
 std::shared_ptr<Character> CharacterFactory::CreateCharacter(const CharacterClass& characterClass)
 {
     std::shared_ptr<Character> character = std::make_shared<Character>(characterClass);
     character->Health = 100.f;
     character->BaseDamage = 20.f;
     character->Name = GetRandomName();
-    character->DamageMultiplier = 1.f + rand() % 4; 
+    character->DamageMultiplier = 1.f + rand() % 4;
+
+    const std::shared_ptr<Skill> skill = SkillFactory::CreateSkill(*character);
+    character->SetSkill(skill);
 
     return character;
 }

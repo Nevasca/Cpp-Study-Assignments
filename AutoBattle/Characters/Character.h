@@ -3,9 +3,11 @@
 #include <string>
 
 #include "CharacterClass.h"
+#include "Skills/Skill.h"
 #include "../Battle/Battlefield.h"
 
 class Battlefield;
+class Skill;
 
 class Character
 {
@@ -16,11 +18,14 @@ public:
     ~Character();
     
     void StartTurn();
-    void Attack();
     bool TakeDamage(const float& amount);
     bool IsDead();
     void SetBattlefield(const std::shared_ptr<Battlefield>& battlefield);
+    void SetSkill(const std::shared_ptr<Skill>& skill);
     bool IsFromSameTeam(const Character& character) const;
+    bool HasTarget() const;
+    bool IsFacingTarget() const;
+    std::weak_ptr<Character> GetTarget();
     Position GetPosition() const;
     std::string ToString() const;
     
@@ -34,11 +39,12 @@ public:
     std::shared_ptr<GridBox> CurrentBox{};
 
 private:
+    void Attack();
     void Die();
     void MoveCloserToTarget();
     bool WalkTo(const Position& direction, const std::string& directionName);
-    bool IsFacingTarget();
 
     std::weak_ptr<Character> mTarget{};
     std::shared_ptr<Battlefield> mBattlefield{};
+    std::shared_ptr<Skill> mSkill{};
 };

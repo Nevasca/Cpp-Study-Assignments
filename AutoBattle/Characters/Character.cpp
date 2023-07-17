@@ -4,8 +4,7 @@
 
 Character::Character(CharacterClass InClass)
     : Class(InClass)
-{
-}
+{ }
 
 Character::~Character()
 {
@@ -27,7 +26,11 @@ void Character::StartTurn()
         return;
     }
 
-    if(IsFacingTarget())
+    if(mSkill->CanCast())
+    {
+        mSkill->Cast();
+    }
+    else if(IsFacingTarget())
     {
         Attack();
     }
@@ -39,12 +42,6 @@ void Character::StartTurn()
 
 void Character::Attack()
 {
-    if(mTarget.expired())
-    {
-        std::cout << "Character " << this->ToString() << " has no valid target" << std::endl;
-        return;
-    }
-    
     auto randomDamage = static_cast<float>(rand() % static_cast<int>(BaseDamage));
     randomDamage *= DamageMultiplier;
 
@@ -90,9 +87,24 @@ void Character::SetBattlefield(const std::shared_ptr<Battlefield>& battlefield)
     mBattlefield = battlefield;
 }
 
+void Character::SetSkill(const std::shared_ptr<Skill>& skill)
+{
+    mSkill = skill;
+}
+
 bool Character::IsFromSameTeam(const Character& character) const
 {
     return TeamId >= 0 && TeamId == character.TeamId;
+}
+
+bool Character::HasTarget() const
+{
+    return !mTarget.expired();
+}
+
+std::weak_ptr<Character> Character::GetTarget()
+{
+    return mTarget;
 }
 
 Position Character::GetPosition() const
@@ -162,8 +174,13 @@ bool Character::WalkTo(const Position& direction, const std::string& directionNa
     return true;
 }
 
-bool Character::IsFacingTarget()
+bool Character::IsFacingTarget() const
 {
+    if(!HasTarget())
+    {
+        return false;
+    }
+    
     auto target = mTarget.lock();
     Position offset = target->GetPosition() - GetPosition();
 
