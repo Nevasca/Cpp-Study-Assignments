@@ -8,7 +8,7 @@
 std::shared_ptr<Character> CharacterFactory::CreateCharacter(const CharacterClass& characterClass)
 {
     std::shared_ptr<Character> character = std::make_shared<Character>(characterClass);
-    character->BaseDamage = 100.f;
+    character->BaseHealth = 100.f;
     character->Health = 100.f;
     character->BaseDamage = 20.f;
     character->Name = GetRandomName();
