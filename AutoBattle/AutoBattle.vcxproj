@@ -161,6 +161,7 @@
     <ClCompile Include="Characters\Character.cpp" />
     <ClCompile Include="Characters\CharacterFactory.cpp" />
     <ClCompile Include="Characters\SkillFactory.cpp" />
+    <ClCompile Include="Characters\Skills\CriticalSkill.cpp" />
     <ClCompile Include="Characters\Skills\HealSkill.cpp" />
     <ClCompile Include="Characters\Skills\KnockbackSkill.cpp" />
     <ClCompile Include="Characters\Skills\Skill.cpp">
@@ -249,6 +250,7 @@
     <ClInclude Include="Characters\CharacterClass.h" />
     <ClInclude Include="Characters\CharacterFactory.h" />
     <ClInclude Include="Characters\SkillFactory.h" />
+    <ClInclude Include="Characters\Skills\CriticalSkill.h" />
     <ClInclude Include="Characters\Skills\HealSkill.h" />
     <ClInclude Include="Characters\Skills\KnockbackSkill.h" />
     <ClInclude Include="Characters\Skills\Skill.h" />
