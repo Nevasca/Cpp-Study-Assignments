@@ -64,14 +64,14 @@ std::weak_ptr<Character> Battlefield::FindClosestTarget(const Character& charact
     return closestTarget;
 }
 
+bool Battlefield::CanMoveTo(const Position& position)
+{
+    return mGrid.IsValidPosition(position) && !mGrid.IsPositionOccupied(position); 
+}
+
 bool Battlefield::MoveCharacterTo(Character& character, const Position& position)
 {
-    if(!mGrid.IsValidPosition(position))
-    {
-        return false;
-    }
-
-    if(mGrid.IsPositionOccupied(position))
+    if(!CanMoveTo(position))
     {
         return false;
     }

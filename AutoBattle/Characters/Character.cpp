@@ -112,6 +112,11 @@ std::weak_ptr<Character> Character::GetTarget()
     return mTarget;
 }
 
+std::shared_ptr<Battlefield> Character::GetBattlefield() const
+{
+    return mBattlefield;
+}
+
 Position Character::GetPosition() const
 {
     return CurrentBox->Position;

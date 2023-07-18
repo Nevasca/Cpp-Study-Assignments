@@ -162,6 +162,7 @@
     <ClCompile Include="Characters\CharacterFactory.cpp" />
     <ClCompile Include="Characters\SkillFactory.cpp" />
     <ClCompile Include="Characters\Skills\HealSkill.cpp" />
+    <ClCompile Include="Characters\Skills\KnockbackSkill.cpp" />
     <ClCompile Include="Characters\Skills\Skill.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -249,6 +250,7 @@
     <ClInclude Include="Characters\CharacterFactory.h" />
     <ClInclude Include="Characters\SkillFactory.h" />
     <ClInclude Include="Characters\Skills\HealSkill.h" />
+    <ClInclude Include="Characters\Skills\KnockbackSkill.h" />
     <ClInclude Include="Characters\Skills\Skill.h" />
     <ClInclude Include="Characters\Skills\ThrowSkill.h" />
     <ClInclude Include="GameManager.h" />

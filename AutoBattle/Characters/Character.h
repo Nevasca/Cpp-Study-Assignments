@@ -27,6 +27,7 @@ public:
     bool HasTarget() const;
     bool IsFacingTarget() const;
     std::weak_ptr<Character> GetTarget();
+    std::shared_ptr<Battlefield> GetBattlefield() const;
     Position GetPosition() const;
     std::string ToString() const;
     
