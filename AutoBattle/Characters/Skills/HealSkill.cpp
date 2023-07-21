@@ -2,13 +2,15 @@
 
 #include <iostream>
 
+#include "../../Logging.h"
+
 HealSkill::HealSkill(Character& character)
     : Skill(character)
 { }
 
 HealSkill::~HealSkill()
 {
-    std::cout << "\n ||| Destroying HealSkill |||\n";
+    LOG_DESTRUCTOR("HealSkill")
 }
 
 bool HealSkill::CanCast()

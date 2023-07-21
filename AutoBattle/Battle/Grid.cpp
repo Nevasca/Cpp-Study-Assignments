@@ -3,6 +3,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "../Logging.h"
+
 Grid::Grid(int rows, int columns)
     : XLength(columns), YLength(rows)
 {
@@ -24,7 +26,7 @@ Grid::Grid(int rows, int columns)
 
 Grid::~Grid()
 {
-    std::cout << "\n ||| Destroying grid |||\n";
+    LOG_DESTRUCTOR("Grid")
 }
 
 std::shared_ptr<GridBox> Grid::GetRandomAvailableLocation()

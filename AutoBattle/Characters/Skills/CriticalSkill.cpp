@@ -2,13 +2,15 @@
 
 #include <iostream>
 
+#include "../../Logging.h"
+
 CriticalSkill::CriticalSkill(Character& character)
     : Skill(character)
 { }
 
 CriticalSkill::~CriticalSkill()
 {
-    std::cout << "\n ||| Destroying CriticalSkill |||\n";
+    LOG_DESTRUCTOR("CriticalSkill")
 }
 
 bool CriticalSkill::CanCast()

@@ -2,13 +2,15 @@
 
 #include <iostream>
 
+#include "../../Logging.h"
+
 ThrowSkill::ThrowSkill(Character& InCharacter)
     : Skill(InCharacter)
 { }
 
 ThrowSkill::~ThrowSkill()
 {
-    std::cout << "\n ||| Destroying ThrowSkill |||\n";
+    LOG_DESTRUCTOR("ThrowSkill")
 }
 
 bool ThrowSkill::CanCast()

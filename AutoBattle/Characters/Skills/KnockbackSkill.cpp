@@ -2,13 +2,15 @@
 
 #include <iostream>
 
+#include "../../Logging.h"
+
 KnockbackSkill::KnockbackSkill(Character& character)
     :Skill(character)
 { }
 
 KnockbackSkill::~KnockbackSkill()
 {
-    std::cout << "\n ||| Destroying KnockbackSkill |||\n";
+    LOG_DESTRUCTOR("KnockbackSkill")
 }
 
 bool KnockbackSkill::CanCast()

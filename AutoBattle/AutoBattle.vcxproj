@@ -257,6 +257,7 @@
     <ClInclude Include="Characters\Skills\ThrowSkill.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Helpers\Utility.h" />
+    <ClInclude Include="Logging.h" />
     <ClInclude Include="Position.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

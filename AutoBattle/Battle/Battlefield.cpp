@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "../Logging.h"
+
 Battlefield::Battlefield(int rows, int columns)
     : mGrid(Grid{rows, columns})
 {
@@ -9,7 +11,7 @@ Battlefield::Battlefield(int rows, int columns)
 
 Battlefield::~Battlefield()
 {
-    std::cout << "\n ||| Destroying battlefield |||\n";
+    LOG_DESTRUCTOR("Battlefield")
 }
 
 bool Battlefield::PlaceNewCharacterRandomly(const std::shared_ptr<Character>& character)

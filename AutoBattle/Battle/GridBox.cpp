@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "../Logging.h"
+
 GridBox::GridBox(::Position InPosition)
     : Position(InPosition)
 {
@@ -9,7 +11,7 @@ GridBox::GridBox(::Position InPosition)
 
 GridBox::~GridBox()
 {
-    std::cout << "\n ||| Destroying gridbox " << this->Position.ToString() << " |||\n";
+    LOG_DESTRUCTOR("GridBox " + this->Position.ToString())
 }
 
 void GridBox::SetOccupied(bool isOccupied, const std::string& marker)

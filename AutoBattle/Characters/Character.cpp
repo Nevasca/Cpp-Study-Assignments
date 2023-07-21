@@ -2,13 +2,15 @@
 
 #include <iostream>
 
+#include "../Logging.h"
+
 Character::Character(CharacterClass InClass)
     : Class(InClass)
 { }
 
 Character::~Character()
 {
-    std::cout << "\n ||| Destroying character " << this->ToString() << " |||\n";
+    LOG_DESTRUCTOR("Character " + this->ToString())
 }
 
 void Character::StartTurn()
