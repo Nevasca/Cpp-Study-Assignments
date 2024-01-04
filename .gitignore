@@ -34,3 +34,7 @@
 # Builds
 /DungeonCrawler/x64
 /AutoBattle/x64
+x64/
+
+# Rider files
+.idea/
