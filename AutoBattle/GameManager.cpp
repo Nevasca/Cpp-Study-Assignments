@@ -250,8 +250,7 @@ void GameManager::PrepareNextTurn()
     std::cout << std::endl << std::endl;
     std::cout << "Click on any key to start the next turn... ";
 
-    char key;
-    std::cin >> key;
+    std::cin.get();
     
     std::cout << std::endl << std::endl;
 }
